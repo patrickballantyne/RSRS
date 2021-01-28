@@ -3,7 +3,7 @@
 
 ### *An Exploration of Regional Retail Mobility during the COVID-19 Pandemic*
 
-Patrick Ballantyne, Alex Singleton 
+**Authors**: Patrick Ballantyne, Alex Singleton 
 
 ### Introduction 
 
