@@ -7,4 +7,3 @@ This repo contains all the code used to produce the main visualisation for this 
 
 ### Graphic
 
-![RSRS_dark](https://user-images.githubusercontent.com/43341895/106113410-5cf38400-6146-11eb-980e-70300df996b1.gif)
