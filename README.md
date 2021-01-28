@@ -1,6 +1,8 @@
 
 ## RSRS Special Issue: Innovation in Regional Graphics 
 
+### *An Exploration of Regional Retail Mobility during the COVID-19 Pandemic*
+
 ### Introduction 
 
 This repo contains all the code used to produce the main visualisation for this submission to this special issue in Regional Studies, Regional Science. Regional graphics can be incredibly powerful tools for telling stories and making arguments about the state of regions and regionalism. This special issue is a compilation of some of the best examples of the format. We are inviting scholars from any discipline to contribute visualisations (maps, infographics, charts, or other forms of spatial visualisations) that address topics conceptualised at the regional scale. For more info on the special issue, see the call for papers [HERE](https://www.regionalstudies.org/special_issue/rsrs-innovation-in-regional-graphics/).
