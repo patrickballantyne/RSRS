@@ -7,4 +7,14 @@ This repo contains all the code used to produce the main visualisation for this 
 
 ### Graphic
 
-![RSRS_dark_c](https://user-images.githubusercontent.com/43341895/106114000-fae74e80-6146-11eb-93fd-72af3cb6dcd2.gif)
+  <p align="center">
+ <img width="350" height="500" src ="https://user-images.githubusercontent.com/43341895/106114000-fae74e80-6146-11eb-93fd-72af3cb6dcd2.gif">
+</p>
+
+
+
+### Acknowledgements
+
+* Thanks to SafeGraph for providing access to their various datasets through their COVID-19 data consortium.
+* Thanks also to the developers of the packages we have used here - 'tmap' (Martijn Tennekes and Team) and 'magick' (Jeroen Ooms).
+
