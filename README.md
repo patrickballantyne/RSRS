@@ -20,6 +20,6 @@ In out submission we adopt a regional approach, focusing on the Chicago Metropol
 ### Acknowledgements
 
 * Thanks to SafeGraph for providing access to their various datasets through their COVID-19 data consortium.
-* Thanks also to the developers of the packages we have used here - ['tmap'](https://github.com/mtennekes/tmap) (Martijn Tennekes and Team), ['magick'](https://github.com/ropensci/magick) (Jeroen Ooms) and ['h3jsr'](https://github.com/obrl-soil/h3jsr) (Lauren O'Brien).
+* Thanks also to the developers of the packages we have used here - ['tmap'](https://github.com/mtennekes/tmap) (Martijn Tennekes and Team), ['magick'](https://github.com/ropensci/magick) (Jeroen Ooms), ['ceramic'])https://cran.r-project.org/web/packages/ceramic/index.html) (Michael Sumner and Team) and ['h3jsr'](https://github.com/obrl-soil/h3jsr) (Lauren O'Brien).
 * Thanks also to my co-author and supervisor Prof. Alex Singleton for useful guidance and feedback on the submission.
 
