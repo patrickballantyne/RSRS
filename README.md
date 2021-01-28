@@ -21,4 +21,5 @@ In out submission we adopt a regional approach, focusing on the Chicago Metropol
 
 * Thanks to SafeGraph for providing access to their various datasets through their COVID-19 data consortium.
 * Thanks also to the developers of the packages we have used here - ['tmap'](https://github.com/mtennekes/tmap) (Martijn Tennekes and Team) and ['magick'](https://github.com/ropensci/magick) (Jeroen Ooms).
+* Thanks also to my co-author and supervisor Prof. Alex Singleton for useful guidance and feedback on the submission.
 
