@@ -13,7 +13,7 @@ This repo contains all the code used to produce the main visualisation for this 
 
 For more info on the special issue, see the call for papers [HERE](https://www.regionalstudies.org/special_issue/rsrs-innovation-in-regional-graphics/).
 
-In our submission we adopt a regional approach, focusing on the Chicago Metropolitan Statistical Area (MSA) as a case study, to explore changes to retail visits during the early weeks of the COVID-19 pandemic. Using data from [SafeGraph](https://www.safegraph.com/covid-19-data-consortium#:~:text=SafeGraph%20is%20providing%20free%20access,COVID%2D19%20(Coronavirus)), we explore total visits to retail places for a six-week period during the 'first peak' of the pandemic (02/03 - 06/04). The focus of this Regional Graphic is on mapping weekly change in retail visits at H3 across the Chicago MSA (seen below), but we also disaggregate these visits by Retail Type to explore the response in visits to 'essential' retail places (convenience) in comparison to leisure-based retail (seen plotted below). The code used to produce these visualisations can be found [HERE](RSRS_Graphic.R).
+In our submission we adopt a regional approach, focusing on the Chicago Metropolitan Statistical Area (MSA) as a case study, to explore changes to retail visits during the early weeks of the COVID-19 pandemic. Using data from [SafeGraph](https://www.safegraph.com/covid-19-data-consortium#:~:text=SafeGraph%20is%20providing%20free%20access,COVID%2D19%20(Coronavirus)), we explore total visits to retail places for a six-week period during the 'first peak' of the pandemic (02/03 - 06/04). The focus of this Regional Graphic is on mapping weekly change in retail visits at H3 across the Chicago MSA (seen below), but we also disaggregate these visits by Retail Type to explore the response in visits to 'essential' retail places (convenience) in comparison to leisure-based retail, which you can view [HERE](Outputs/barchart.tiff). The code used to produce these visualisations can be found [HERE](RSRS_Graphic.R).
 
 ### Graphic
 
@@ -21,11 +21,6 @@ In our submission we adopt a regional approach, focusing on the Chicago Metropol
  <img width="500" height="650" src ="Outputs/Maps/RSRS.gif">
 </p>
 
-### Additional Visualisation 
-
-  <p align="center">
- <src ="Outputs/barchart.tiff">
-</p>
 
 
 ### Acknowledgements
