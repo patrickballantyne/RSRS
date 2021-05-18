@@ -18,7 +18,7 @@ In our submission we adopt a regional approach, focusing on the Chicago Metropol
 ### Graphic
 
   <p align="center">
- <img width="500" height="650" src ="https://user-images.githubusercontent.com/43341895/106120235-08540700-614e-11eb-8cc2-6483a23597aa.gif">
+ <img width="500" height="650" src ="Outputs/Maps/RSRS.gif">
 </p>
 
 ### Acknowledgements
