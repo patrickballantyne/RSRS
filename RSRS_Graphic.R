@@ -9,6 +9,7 @@ library(tmap)
 library(tidyverse)
 library(h3jsr)
 library(ceramic)
+library(magick)
 options(scipen = 999)
 
 ## Setup
@@ -51,9 +52,6 @@ basemap <- ceramic::cc_location(loc = bm_bbox, zoom = 9,
 
 ## Map Labels
 lbls <- st_read("Data/Labels.shp")
-lbls <- lbls %>%
-  filter(Name != "The Quarry Shopping Centre") %>%
-  filter(Name != "Bloomingdale Court")
 
 # 3. Calculation of Retail Visits by Retail Type --------------------------
 
@@ -79,7 +77,7 @@ db_by_type <- ptns_clean %>%
   mutate(label = paste0(sprintf("%0.1f", percent), "%"))
 
 ## Reorder weeks
-db_by_type$week <- factor(db_by_type$week, levels = c("02/03", "09/03", "16/03", "23/03", "31/03", "06/04"))
+db_by_type$week <- factor(db_by_type$week, levels = c("02/03", "09/03", "16/03", "23/03", "30/03", "06/04"))
 
 ## Visualise
 ggplot(db_by_type, aes(x = week, y = total_weekly_visits, fill = ldc_aggregation)) +
@@ -96,7 +94,7 @@ ggplot(db_by_type, aes(x = week, y = total_weekly_visits, fill = ldc_aggregation
         plot.background = element_rect(fill = "black", colour = "black"),
         axis.line = element_line(colour="White"), axis.text = element_text(colour = "White", family = "Times", size = 12),
         axis.ticks = element_line(colour = "White"), text = element_text(colour = "White", family = "Times", size = 12))
-
+ggsave("Outputs/barchart.tiff", dpi = 800)
 
 # 3. Mapping of Retail Mobility ---------------------------------------
 
@@ -118,21 +116,21 @@ db_h3 <- db_h3 %>%
   drop_na() %>%
   st_as_sf()
 
-## Map
+## Map Template
 tm_shape(basemap) +
   tm_rgb() +
   tm_shape(db_h3) +
-  tm_fill(col = "march_16_total", palette = "-YlOrRd", 
-          style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf), alpha = 0.5) +
+  tm_fill(col = "march_02_total", palette = "-YlOrRd", title = "Visits to Retail Places",
+          style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf), alpha = 0.75) +
   tm_shape(lbls) +
   tm_dots(size = 0.05, col = "white") +
-  tm_text("Name", col = "white", size = 0.75, just = "bottom", ymod = 0.25, alpha = 1) +
-  tm_layout(frame = FALSE, legend.position = c("left", "bottom"),
+  tm_text("Name", col = "white", size = 0.75, just = "bottom", ymod = 0.25, alpha = 1,
+          fontface = "bold", shadow = TRUE) +
+  tm_layout(title = "WB 02/03", frame = FALSE, legend.position = c("left", "bottom"),
             legend.frame = FALSE, legend.show = TRUE, legend.bg.alpha = 0.8,
-            title = "WB 02/03",
-            title.position = c("left", "bottom"), title.color = "white", 
+            title.position = c("left", "bottom"), title.color = "White", 
             fontfamily = "Times", title.fontfamily = "Times", legend.text.color = "white",
-            title.size = 1,
+            title.size = 1, attr.color = "white",
             legend.text.size = 0.75, legend.title.size = 1, bg.color = "grey85",
             outer.margins = c(0,0,0,0)) +
   tm_shape(bbox) + 
@@ -141,164 +139,181 @@ tm_shape(basemap) +
   tm_add_legend("fill", col = "black", size = 0.8, labels = "Chicago Metro Area",
                 border.col = "orange") +
   tm_scale_bar(position = c("right", "bottom"), text.size = 0.75, breaks = c(0, 25, 50),
-               text.color = "white", bg.color = "white", bg.alpha = 0.25)
+               text.color = "white", bg.color = "white", bg.alpha = 0.15)
 
 
 # 4. Static Maps ----------------------------------------------------------
 
-## Here i build each map individually, writing them out so they can be animated in section 5
-
-## 2nd March 
-p1 <- tm_shape(basemap) +
+## WB 02/03
+t1 <- tm_shape(basemap) +
   tm_rgb() +
   tm_shape(db_h3) +
-  tm_fill(col = "02/03", style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf),
-          labels = c("< 2,500", "2,500 to 4,999", "5,000 to 9,999", "10,000 to 19,999", 
-                     "20,000 to 29,999", "> 30,000"),
-          palette = "inferno", alpha = 0.4,
-          title = "Visits to Retail Stores") +
-  tm_layout(frame = FALSE, legend.position = c("left", "bottom"),
+  tm_fill(col = "march_02_total", palette = "-YlOrRd", title = "Visits to Retail Places",
+          style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf), alpha = 0.75) +
+  tm_shape(lbls) +
+  tm_dots(size = 0.05, col = "white") +
+  tm_text("Name", col = "white", size = 0.75, just = "bottom", ymod = 0.25, alpha = 1,
+          fontface = "bold", shadow = TRUE) +
+  tm_layout(title = "WB 02/03", frame = FALSE, legend.position = c("left", "bottom"),
             legend.frame = FALSE, legend.show = TRUE, legend.bg.alpha = 0.8,
-            title = "WB 02/03",
-            title.position = c("left", "bottom"), title.color = "white", 
+            title.position = c("left", "bottom"), title.color = "White", 
             fontfamily = "Times", title.fontfamily = "Times", legend.text.color = "white",
-            title.size = 1,
+            title.size = 1, attr.color = "white",
             legend.text.size = 0.75, legend.title.size = 1, bg.color = "grey85",
             outer.margins = c(0,0,0,0)) +
   tm_shape(bbox) + 
   tm_fill(col = "orange", alpha = 0.05) +
   tm_borders(col = "orange", alpha = 0.5, lwd = 2) + 
   tm_add_legend("fill", col = "black", size = 0.8, labels = "Chicago Metro Area",
-                border.col = "orange")
-tmap_save(p1, "week1.png")
+                border.col = "orange") +
+  tm_scale_bar(position = c("right", "bottom"), text.size = 0.75, breaks = c(0, 25, 50),
+               text.color = "white", bg.color = "white", bg.alpha = 0.15)
+tmap_save(t1, "Outputs/Maps/t1.tiff", dpi = 800)
 
-## 9th March
-p2 <- tm_shape(basemap) +
+
+## WB 09/03
+t2 <- tm_shape(basemap) +
   tm_rgb() +
   tm_shape(db_h3) +
-  tm_fill(col = "09/03", style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf),
-          labels = c("< 2,500", "2,500 to 4,999", "5,000 to 9,999", "10,000 to 19,999", 
-                     "20,000 to 29,999", "> 30,000"),
-          palette = "inferno", alpha = 0.4,
-          title = "Visits to Retail Stores") +
-  tm_layout(frame = FALSE, legend.position = c("left", "bottom"),
+  tm_fill(col = "march_09_total", palette = "-YlOrRd", title = "Visits to Retail Places",
+          style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf), alpha = 0.75) +
+  tm_shape(lbls) +
+  tm_dots(size = 0.05, col = "white") +
+  tm_text("Name", col = "white", size = 0.75, just = "bottom", ymod = 0.25, alpha = 1,
+          fontface = "bold", shadow = TRUE) +
+  tm_layout(title = "WB 09/03", frame = FALSE, legend.position = c("left", "bottom"),
             legend.frame = FALSE, legend.show = TRUE, legend.bg.alpha = 0.8,
-            title = "WB 09/03",
-            title.position = c("left", "bottom"), title.color = "white", 
+            title.position = c("left", "bottom"), title.color = "White", 
             fontfamily = "Times", title.fontfamily = "Times", legend.text.color = "white",
-            title.size = 1,
+            title.size = 1, attr.color = "white",
             legend.text.size = 0.75, legend.title.size = 1, bg.color = "grey85",
             outer.margins = c(0,0,0,0)) +
   tm_shape(bbox) + 
   tm_fill(col = "orange", alpha = 0.05) +
   tm_borders(col = "orange", alpha = 0.5, lwd = 2) + 
   tm_add_legend("fill", col = "black", size = 0.8, labels = "Chicago Metro Area",
-                border.col = "orange")
-tmap_save(p2, "week2.png")
+                border.col = "orange") +
+  tm_scale_bar(position = c("right", "bottom"), text.size = 0.75, breaks = c(0, 25, 50),
+               text.color = "white", bg.color = "white", bg.alpha = 0.15)
+tmap_save(t2, "Outputs/Maps/t2.tiff", dpi = 800)
 
-## 16th March 
-p3 <- tm_shape(basemap) +
+
+## WB 16/03
+t3 <- tm_shape(basemap) +
   tm_rgb() +
   tm_shape(db_h3) +
-  tm_fill(col = "16/03", style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf),
-          labels = c("< 2,500", "2,500 to 4,999", "5,000 to 9,999", "10,000 to 19,999", 
-                     "20,000 to 29,999", "> 30,000"),
-          palette = "inferno", alpha = 0.4,
-          title = "Visits to Retail Stores") +
-  tm_layout(frame = FALSE, legend.position = c("left", "bottom"),
+  tm_fill(col = "march_16_total", palette = "-YlOrRd", title = "Visits to Retail Places",
+          style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf), alpha = 0.75) +
+  tm_shape(lbls) +
+  tm_dots(size = 0.05, col = "white") +
+  tm_text("Name", col = "white", size = 0.75, just = "bottom", ymod = 0.25, alpha = 1,
+          fontface = "bold", shadow = TRUE) +
+  tm_layout(title = "WB 16/03", frame = FALSE, legend.position = c("left", "bottom"),
             legend.frame = FALSE, legend.show = TRUE, legend.bg.alpha = 0.8,
-            title = "WB 16/03",
-            title.position = c("left", "bottom"), title.color = "white", 
+            title.position = c("left", "bottom"), title.color = "White", 
             fontfamily = "Times", title.fontfamily = "Times", legend.text.color = "white",
-            title.size = 1,
+            title.size = 1, attr.color = "white",
             legend.text.size = 0.75, legend.title.size = 1, bg.color = "grey85",
             outer.margins = c(0,0,0,0)) +
   tm_shape(bbox) + 
   tm_fill(col = "orange", alpha = 0.05) +
   tm_borders(col = "orange", alpha = 0.5, lwd = 2) + 
   tm_add_legend("fill", col = "black", size = 0.8, labels = "Chicago Metro Area",
-                border.col = "orange")
-tmap_save(p3, "week3.png")
+                border.col = "orange") +
+  tm_scale_bar(position = c("right", "bottom"), text.size = 0.75, breaks = c(0, 25, 50),
+               text.color = "white", bg.color = "white", bg.alpha = 0.15)
+tmap_save(t3, "Outputs/Maps/t3.tiff", dpi = 800)
 
-## 23rd March
-p4 <- tm_shape(basemap) +
+
+## WB 23/03
+t4 <- tm_shape(basemap) +
   tm_rgb() +
   tm_shape(db_h3) +
-  tm_fill(col = "23/03", style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf),
-          labels = c("< 2,500", "2,500 to 4,999", "5,000 to 9,999", "10,000 to 19,999", 
-                     "20,000 to 29,999", "> 30,000"),
-          palette = "inferno", alpha = 0.4,
-          title = "Visits to Retail Stores") +
-  tm_layout(frame = FALSE, legend.position = c("left", "bottom"),
+  tm_fill(col = "march_23_total", palette = "-YlOrRd", title = "Visits to Retail Places",
+          style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf), alpha = 0.75) +
+  tm_shape(lbls) +
+  tm_dots(size = 0.05, col = "white") +
+  tm_text("Name", col = "white", size = 0.75, just = "bottom", ymod = 0.25, alpha = 1,
+          fontface = "bold", shadow = TRUE) +
+  tm_layout(title = "WB 23/03", frame = FALSE, legend.position = c("left", "bottom"),
             legend.frame = FALSE, legend.show = TRUE, legend.bg.alpha = 0.8,
-            title = "WB 23/03",
-            title.position = c("left", "bottom"), title.color = "white", 
+            title.position = c("left", "bottom"), title.color = "White", 
             fontfamily = "Times", title.fontfamily = "Times", legend.text.color = "white",
-            title.size = 1,
+            title.size = 1, attr.color = "white",
             legend.text.size = 0.75, legend.title.size = 1, bg.color = "grey85",
             outer.margins = c(0,0,0,0)) +
   tm_shape(bbox) + 
   tm_fill(col = "orange", alpha = 0.05) +
   tm_borders(col = "orange", alpha = 0.5, lwd = 2) + 
   tm_add_legend("fill", col = "black", size = 0.8, labels = "Chicago Metro Area",
-                border.col = "orange")
-tmap_save(p4, "week4.png")
+                border.col = "orange") +
+  tm_scale_bar(position = c("right", "bottom"), text.size = 0.75, breaks = c(0, 25, 50),
+               text.color = "white", bg.color = "white", bg.alpha = 0.15)
+tmap_save(t4, "Outputs/Maps/t4.tiff", dpi = 800)
 
 
-## 30th March
-p5 <- tm_shape(basemap) +
+## WB 30/03
+t5 <- tm_shape(basemap) +
   tm_rgb() +
   tm_shape(db_h3) +
-  tm_fill(col = "30/03", style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf),
-          labels = c("< 2,500", "2,500 to 4,999", "5,000 to 9,999", "10,000 to 19,999", 
-                     "20,000 to 29,999", "> 30,000"),
-          palette = "inferno", alpha = 0.4,
-          title = "Visits to Retail Stores") +
-  tm_layout(frame = FALSE, legend.position = c("left", "bottom"),
+  tm_fill(col = "march_30_total", palette = "-YlOrRd", title = "Visits to Retail Places",
+          style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf), alpha = 0.75) +
+  tm_shape(lbls) +
+  tm_dots(size = 0.05, col = "white") +
+  tm_text("Name", col = "white", size = 0.75, just = "bottom", ymod = 0.25, alpha = 1,
+          fontface = "bold", shadow = TRUE) +
+  tm_layout(title = "WB 30/03", frame = FALSE, legend.position = c("left", "bottom"),
             legend.frame = FALSE, legend.show = TRUE, legend.bg.alpha = 0.8,
-            title = "WB 30/03",
-            title.position = c("left", "bottom"), title.color = "white", 
+            title.position = c("left", "bottom"), title.color = "White", 
             fontfamily = "Times", title.fontfamily = "Times", legend.text.color = "white",
-            title.size = 1,
+            title.size = 1, attr.color = "white",
             legend.text.size = 0.75, legend.title.size = 1, bg.color = "grey85",
             outer.margins = c(0,0,0,0)) +
   tm_shape(bbox) + 
   tm_fill(col = "orange", alpha = 0.05) +
   tm_borders(col = "orange", alpha = 0.5, lwd = 2) + 
   tm_add_legend("fill", col = "black", size = 0.8, labels = "Chicago Metro Area",
-                border.col = "orange")
-tmap_save(p5, "week5.png")
+                border.col = "orange") +
+  tm_scale_bar(position = c("right", "bottom"), text.size = 0.75, breaks = c(0, 25, 50),
+               text.color = "white", bg.color = "white", bg.alpha = 0.15)
+tmap_save(t5, "Outputs/Maps/t5.tiff", dpi = 800)
 
-## 6th April
-p6 <- tm_shape(basemap) +
+
+## WB 06/03
+t6 <- tm_shape(basemap) +
   tm_rgb() +
   tm_shape(db_h3) +
-  tm_fill(col = "06/04", style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf),
-          labels = c("< 2,500", "2,500 to 4,999", "5,000 to 9,999", "10,000 to 19,999", 
-                     "20,000 to 29,999", "> 30,000"),
-          palette = "inferno", alpha = 0.4,
-          title = "Visits to Retail Stores") +
-  tm_layout(frame = FALSE, legend.position = c("left", "bottom"),
+  tm_fill(col = "april_06_total", palette = "-YlOrRd", title = "Visits to Retail Places",
+          style = "fixed", breaks = c(1, 2500, 5000, 10000, 20000, 30000, Inf), alpha = 0.75) +
+  tm_shape(lbls) +
+  tm_dots(size = 0.05, col = "white") +
+  tm_text("Name", col = "white", size = 0.75, just = "bottom", ymod = 0.25, alpha = 1,
+          fontface = "bold", shadow = TRUE) +
+  tm_layout(title = "WB 06/04", frame = FALSE, legend.position = c("left", "bottom"),
             legend.frame = FALSE, legend.show = TRUE, legend.bg.alpha = 0.8,
-            title = "WB 06/04",
-            title.position = c("left", "bottom"), title.color = "white", 
+            title.position = c("left", "bottom"), title.color = "White", 
             fontfamily = "Times", title.fontfamily = "Times", legend.text.color = "white",
-            title.size = 1,
+            title.size = 1, attr.color = "white",
             legend.text.size = 0.75, legend.title.size = 1, bg.color = "grey85",
             outer.margins = c(0,0,0,0)) +
   tm_shape(bbox) + 
   tm_fill(col = "orange", alpha = 0.05) +
   tm_borders(col = "orange", alpha = 0.5, lwd = 2) + 
   tm_add_legend("fill", col = "black", size = 0.8, labels = "Chicago Metro Area",
-                border.col = "orange")
-tmap_save(p6, "week6.png")
+                border.col = "orange") +
+  tm_scale_bar(position = c("right", "bottom"), text.size = 0.75, breaks = c(0, 25, 50),
+               text.color = "white", bg.color = "white", bg.alpha = 0.15)
+tmap_save(t6, "Outputs/Maps/t6.tiff", dpi = 800)
 
 
 # 5. Animation  -----------------------------------------------------------
 
+## Swap wd
+setwd("Outputs/Maps")
+
 ## Assemble GIF
-list.files(pattern = '*.png') %>%
+list.files(pattern = '*.tiff') %>%
   image_read() %>%
   image_join() %>%
-  magick::image_animate(fps = 1, loop = 100) %>%
-  image_write("out.gif")
+  image_animate(fps = 1, loop = 100) %>%
+  image_write("RSRS.gif")
