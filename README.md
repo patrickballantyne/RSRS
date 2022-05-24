@@ -4,6 +4,7 @@
 ### *An Exploration of Regional Retail Visits during the COVID-19 Pandemic*
 
 **Authors**: Patrick Ballantyne, Alex Singleton, Les Dolega
+
 **Paper**: https://www.tandfonline.com/doi/full/10.1080/21681376.2021.1973548
 
 ### Introduction 
